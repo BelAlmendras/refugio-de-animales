@@ -12,7 +12,7 @@ public class Main {
 
             for (Map.Entry<String, String> animalEntry : animales.entrySet()) {
                     System.out.println(
-                            "Especie: " + especie + " | Animal: " + animalEntry.getKey() + " | Estado: " + animalEntry.getValue());
+                            "Especie: " + especie + " | Nombre: " + animalEntry.getKey() + " | Estado: " + animalEntry.getValue());
          } }
 
         long disponibles = especies.values().stream()
@@ -34,7 +34,7 @@ public class Main {
 
     public void animalesAdoptados() {
         System.out.println("==== Animales Adoptados ====");
-
+        boolean adoptado = false;
         for (Map.Entry<String, Map<String, String>> especieEntry : especies.entrySet()) {
             String especie = especieEntry.getKey();
             Map<String, String> animales = especieEntry.getValue();
@@ -42,12 +42,14 @@ public class Main {
             for (Map.Entry<String, String> animalEntry : animales.entrySet()) {
                 if (animalEntry.getValue().equalsIgnoreCase("Adoptado")) {
                     System.out.println(
-                            "Especie: " + especie + " | Animal: " + animalEntry.getKey()
+                            "Especie: " + especie + " | Nombre: " + animalEntry.getKey()
                     );
-                }else{
-                    System.out.println("No hay animales adoptados");
+                    adoptado = true;
                 }
             }
+        }
+        if (!adoptado) {
+            System.out.println("No hay animales para mostrar");
         }
     }
 
@@ -55,24 +57,28 @@ public class Main {
     public void animalesDisponibles() {
         System.out.println("==== Animales Disponibles ====");
 
+        boolean disponible = false;
+
         for (Map.Entry<String, Map<String, String>> especieEntry : especies.entrySet()) {
             String especie = especieEntry.getKey();
             Map<String, String> animales = especieEntry.getValue();
-
             for (Map.Entry<String, String> animalEntry : animales.entrySet()) {
                 if (animalEntry.getValue().equalsIgnoreCase("Disponible")) {
                     System.out.println(
                             "Especie: " + especie +
-                                    " | Animal: " + animalEntry.getKey()
-                    );
-                } else if (animalEntry.getValue().equalsIgnoreCase(null)) {
-                    System.out.println("No hay animales Disponibles");
+                                    " | Nombre: " + animalEntry.getKey()
+
+                    );disponible = true;
                 }
             }
         }
+        if (!disponible) {
+            System.out.println("No hay animales disponibles");
+        }
+
     }
 
-public String marcarAdoptado(){
+public void marcarAdoptado(){
     System.out.println("==== Marcar Adoptado ====");
     System.out.println("Escriba el nombre de la especie");
     String especie = sc.nextLine().toLowerCase();
@@ -82,14 +88,13 @@ public String marcarAdoptado(){
     if(especies.containsKey(especie)) {
         if (especies.get(especie).containsKey(animal)) {
             especies.get(especie).put(animal, "Adoptado");
-            return "Estado cambiado";
+            System.out.println("Estado cambiado"); ;
         } else {
-            return "El animal no existe";
+            System.out.println("El animal no existe");
         }
     }else{
-            return "Especie no encontrada";
+        System.out.println("Animal no encontrado");
     }
-
 
 }
 
@@ -105,19 +110,27 @@ public String marcarAdoptado(){
         }
     }
 
-    public String registroAnimal() {
+    public void registroAnimal() {
         System.out.println("==== Registro Animal ====");
         System.out.println("Escriba el nombre del animal: ");
-        String nombre = sc.nextLine();
+        String nombre = sc.nextLine().toLowerCase();
         System.out.println("Escriba la especie de animal: ");
         String especie = sc.nextLine().toLowerCase();
-       if (especies.containsKey(especie)) {
-           especies.get(especie).put(nombre, "Disponible");
-           return "Animal registrado!!";
-       }else{
-           return "La especie de animal no existe";
 
-       }
+        if (!especies.containsKey(especie)) {
+            System.out.println("La especie no existe");
+            return;
+        }
+
+        Map<String, String> animales = especies.get(especie);
+
+        if (animales.containsKey(nombre)) {
+            System.out.println("El animal ya existe");
+            return;
+        }
+
+        animales.put(nombre, "Disponible");
+        System.out.println("Animal registrado!");
     }
 
     public void menu(){
